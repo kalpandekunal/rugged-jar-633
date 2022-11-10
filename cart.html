@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <style>
+        #container{
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: auto;
+    gap:20px;
+}
+ #container>div>img{
+    width:50%;
+    border-radius:50px;
+    background-color:#494949
+}
+#container>div{
+    text-align:center;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+</body>
+</html>
+
+<script>
+    let cartItems = JSON.parse(localStorage.getItem("cartProducts"));
+    displayCard(cartItems);
+
+    function displayCard(out) {
+        document.querySelector("#container").innerHTML="";
+        //console.log(out);
+        out.forEach((elem)=>{
+            let div = document.createElement("div");
+
+    let image = document.createElement("img");
+    image.setAttribute("src",elem.image_link);
+
+    let Desc = document.createElement("p");
+    Desc.innerText = elem.description;
+
+    let price = document.createElement("h3");
+    price.innerText = elem.price;
+
+    let Name = document.createElement("h2");
+    Name.innerText = elem.name;
+
+    div.append(image,Name,Desc,price);
+    document.querySelector("#container").append(div);
+    
+        });
+    }
+</script>
