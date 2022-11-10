@@ -14,7 +14,7 @@
             <div class="left">
                 <div class="logo"><p><span>Skin</span>CareStore</p></div>
                 <div class="search_bar">
-                    <input type="text" placeholder="Search for a product or brand..">
+                    <input oninput="search()" type="text" placeholder="Search for a product">
                 </div>
             </div>
             <div class="right">
@@ -67,27 +67,27 @@
     
     <div id="shop">
         <div>
-            <img width="250px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/01/Page-001-025201.png">
+            <img width="200px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/01/Page-001-025201.png">
             <p></p>
         </div>
         <div>
-            <img width="250px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/09/Page-002-025209.png">
+            <img width="200px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/09/Page-002-025209.png">
             <p></p>
         </div>
         <div>
-            <img width="250px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/17/Page-003-025217.png">
+            <img width="200px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/17/Page-003-025217.png">
             <p></p>
         </div>
         <div>
-            <img width="250px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/21/Page-004-025221.png">
+            <img width="200px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/21/Page-004-025221.png">
             <p></p>
         </div>
         <div>
-            <img width="250px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/40/Page-005-025240.png">
+            <img width="200px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/40/Page-005-025240.png">
             <p></p>
         </div>
         <div>
-            <img width="250px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/58/Page-006-025258.png">
+            <img width="200px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/58/Page-006-025258.png">
             <p></p>
         </div>
     </div>
@@ -128,12 +128,18 @@
 //     slides[index].classList.add("active");
 //}
 
-    let url = "https://makeup-api.herokuapp.com/api/v1/products.json";
+    let url = "https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline";
+    //let url = "http://makeup-api.herokuapp.com/api/v1/products.json?product_type=Eyebrow";
 
+    
+    let bag=[];
+    let cartItems=JSON.parse(localStorage.getItem("cartProducts"))||[]
     async function getData(){
         try {
             let res = await fetch(url);
             let out = await res.json();
+            bag=out;
+            console.log(bag);
             displayCard(out);
         }
         catch(err){
@@ -143,8 +149,20 @@
 
     getData();
 
+        function search(){
+            let q = document.querySelector("input").value;
+            console.log(q);
+            let newData = bag.filter(function(elem){
+                return elem.name.toLowerCase().includes(q.toLowerCase());
+            })
+           // console.log(newData);
+           displayCard(newData);
+        }
+
+
     function displayCard(out) {
-        console.log(out);
+        document.querySelector("#container").innerHTML="";
+        //console.log(out);
         out.forEach((elem)=>{
             let div = document.createElement("div");
 
@@ -154,10 +172,23 @@
     let Desc = document.createElement("p");
     Desc.innerText = elem.description;
 
-    div.append(image,Desc);
+    let price = document.createElement("h3");
+    price.innerText = elem.price;
+
+    let Name = document.createElement("h2");
+    Name.innerText = elem.name;
+
+    let btn = document.createElement("button");
+    btn.innerText = "Add to Cart";
+    btn.addEventListener("click",function(){
+        cartItems.push(elem);
+        localStorage.setItem("cartProducts",JSON.stringify(cartItems))
+    })
+
+
+    div.append(image,Name,Desc,price,btn);
     document.querySelector("#container").append(div);
     
         })
-        
     }
 </script>
