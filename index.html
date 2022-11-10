@@ -4,9 +4,191 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>SkinCare|Store</title>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <div class="wrapper">
+        <div class="multi_color"></div>
+        <div class="top_nav">
+            <div class="left">
+                <div class="logo"><p><span>Skin</span>CareStore</p></div>
+                <div class="search_bar">
+                    <input oninput="search()" type="text" placeholder="Search for a product">
+                </div>
+            </div>
+            <div class="right">
+                <ul>
+                    <li><a href="file:///C:/Users/91705/Desktop/Project/rugged-jar-633/login.html">Login</a></li>
+                    <li><a href="file:///C:/Users/91705/Desktop/Project/rugged-jar-633/register.html?">Register</a></li>
+                    <li><a href="cart.html">Cart</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="bottom_nav">
+            <ul>
+                <li><a href="#">Brands</a></li>
+                <li><a href="#">Holiday</a></li>
+                <li><a href="#">Sales</a></li>
+                <li><a href="#">Skin Care</a></li>
+                <li><a href="#">Hair</a></li>
+                <li><a href="#">Makeup</a></li>
+                <li><a href="#">Bath & Body</a></li>
+                <li><a href="#">Fragrance</a></li>
+                <li><a href="#">Self-Care</a></li>
+                <li><a href="#">Tools</a></li>
+                <li><a href="#">New & Trending</a></li>
+                <li><a href="#">Build a Routine</a></li>
+                <li><a href="#">Blog</a></li>
+            </ul>
+        </div>
+        <div class="offer">
+            <h5>25% off select brands with code SINGLES+free 13-piece Beauty Bag (worth $117)@$165|Shop now ></h5>
+        </div>
+    </div>
     
+    
+
+
+    <div class="slider">
+        <div class="slider-items">
+            <div class="itemactive">
+                <img src="https://static.thcdn.com/images/xlarge/webp/widgets/121-us/58/SS-Batching-Christmas-Homepage_Banner-EG1180x450_copy_2-060058.jpg"/>
+            </div>
+    
+            <div class="left-slide"><</div>
+            <div class="right-slide">></div>
+
+        </div>
+    </div>
+    <div id="tag">
+        <p>Shop by Category</p>
+    </div>
+    
+    <div id="shop">
+        <div>
+            <img width="200px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/01/Page-001-025201.png">
+            <p></p>
+        </div>
+        <div>
+            <img width="200px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/09/Page-002-025209.png">
+            <p></p>
+        </div>
+        <div>
+            <img width="200px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/17/Page-003-025217.png">
+            <p></p>
+        </div>
+        <div>
+            <img width="200px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/21/Page-004-025221.png">
+            <p></p>
+        </div>
+        <div>
+            <img width="200px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/40/Page-005-025240.png">
+            <p></p>
+        </div>
+        <div>
+            <img width="200px" src="https://static.thcdn.com/images/small/webp/widgets/121-us/58/Page-006-025258.png">
+            <p></p>
+        </div>
+    </div>
+    <div id="tag1">
+        <p>Trending Offers</p>
+    </div>
+    <div id="container"></div>
 </body>
 </html>
+
+<script>
+// var slides = document.querySelector(".slider-items").children;
+// var nextSlide = document.querySelector(".right-slide");
+// var prevSlide = document.querySelector(".left-slide");
+// var totalSlides = slides.length;
+// var index=0;
+
+// console.log(slides.length);
+
+// nextSlide.onClick = function(){
+//     next("next");
+// }
+// prevSlide.onClick = function(){
+//     next("prev");
+// }
+
+// function next(direction){
+//     if(direction=="next"){
+//         index++;
+//         if(index==totalSlides){
+//             index=0;
+//         }
+//     }
+
+//     for(i=0;i<slides.length;i++){
+//         slides[i].classList.remove("active");
+//     }
+//     slides[index].classList.add("active");
+//}
+
+    let url = "https://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline";
+    //let url = "http://makeup-api.herokuapp.com/api/v1/products.json?product_type=Eyebrow";
+
+    
+    let bag=[];
+    let cartItems=JSON.parse(localStorage.getItem("cartProducts"))||[]
+    async function getData(){
+        try {
+            let res = await fetch(url);
+            let out = await res.json();
+            bag=out;
+            console.log(bag);
+            displayCard(out);
+        }
+        catch(err){
+            alert(err);
+        }
+    }
+
+    getData();
+
+        function search(){
+            let q = document.querySelector("input").value;
+            console.log(q);
+            let newData = bag.filter(function(elem){
+                return elem.name.toLowerCase().includes(q.toLowerCase());
+            })
+           // console.log(newData);
+           displayCard(newData);
+        }
+
+
+    function displayCard(out) {
+        document.querySelector("#container").innerHTML="";
+        //console.log(out);
+        out.forEach((elem)=>{
+            let div = document.createElement("div");
+
+    let image = document.createElement("img");
+    image.setAttribute("src",elem.image_link);
+
+    let Desc = document.createElement("p");
+    Desc.innerText = elem.description;
+
+    let price = document.createElement("h3");
+    price.innerText = elem.price;
+
+    let Name = document.createElement("h2");
+    Name.innerText = elem.name;
+
+    let btn = document.createElement("button");
+    btn.innerText = "Add to Cart";
+    btn.addEventListener("click",function(){
+        cartItems.push(elem);
+        localStorage.setItem("cartProducts",JSON.stringify(cartItems))
+    })
+
+    
+    div.append(image,Name,Desc,price,btn);
+    document.querySelector("#container").append(div);
+    
+        })
+    }
+</script>
